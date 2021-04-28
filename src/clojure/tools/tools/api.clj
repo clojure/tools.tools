@@ -10,30 +10,12 @@
   "This api provides functions that can be executed from the Clojure tools using -Ttools."
   (:refer-clojure :exclude [list remove])
   (:require
-    [clojure.java.io :as jio]
     [clojure.pprint :as pprint]
-    [clojure.string :as str]
     [clojure.tools.deps.alpha :as deps]
     [clojure.tools.deps.alpha.tool :as tool]
-    [clojure.tools.deps.alpha.tree :as tree]
-    [clojure.tools.deps.alpha.script.resolve-tags :as resolve-tags]
     [clojure.tools.deps.alpha.extensions :as ext]
-    [clojure.tools.deps.alpha.extensions.pom :as pom]
-    [clojure.tools.deps.alpha.extensions.local :as local]
     [clojure.tools.deps.alpha.extensions.git :as git]
-    [clojure.tools.deps.alpha.gen.pom :as gen-pom]
-    [clojure.tools.deps.alpha.util.maven :as mvn]
-    [clojure.tools.deps.alpha.util.io :as io :refer [printerrln]]
-    [clojure.tools.gitlibs :as gitlibs])
-  (:import
-    [java.io File FileNotFoundException IOException]
-    [java.nio.file Files]
-    [java.nio.file.attribute FileAttribute]
-    [java.util.jar JarFile]
-    [org.apache.maven.model Model]
-    [org.eclipse.aether.artifact DefaultArtifact]
-    [org.eclipse.aether.installation InstallRequest]
-    [clojure.lang IExceptionInfo]))
+    [clojure.tools.gitlibs :as gitlibs]))
 
 (set! *warn-on-reflection* true)
 
