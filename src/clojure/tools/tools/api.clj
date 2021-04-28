@@ -17,8 +17,6 @@
     [clojure.tools.deps.alpha.extensions.git :as git]
     [clojure.tools.gitlibs :as gitlibs]))
 
-(set! *warn-on-reflection* true)
-
 (defn install
   "Install a tool for later use, taking the following required fields:
     lib - lib name, and coord value
