@@ -1,6 +1,6 @@
 {:paths ["src"]
  :deps {
-   org.clojure/tools.deps.alpha {:local/root "../tools.deps.alpha3"} ;; {:mvn/version "0.11.910"}
+   org.clojure/tools.deps.alpha {:mvn/version "0.11.911-SNAPSHOT"} ;; {:local/root "../tools.deps.alpha3"}
    org.clojure/tools.gitlibs {:mvn/version "2.3.167"}
  }
  :tools/ns.default clojure.tools.tools.api
