@@ -4,6 +4,6 @@
    org.clojure/tools.gitlibs {:mvn/version "2.3.167"}
  }
  :tools/usage {
-   :ns.default clojure.tools.tools.api
+   :ns-default clojure.tools.tools.api
  }
 }
