@@ -73,16 +73,18 @@
 (defn show
   "Print info and usage for this :tool"
   [{:keys [tool] :as args}]
-  (let [{:keys [lib coord] :as info} (tool/resolve-tool tool)]
-    (if info
-      (do
-        (println "Info for" tool ":")
-        (println)
-        (println "lib:" lib)
-        (println "coord:")
-        (binding [*print-namespace-maps* false]
-          (pprint/pprint coord)))
-      (println "Tool not found"))))
+  (if-let [{:keys [lib coord] :as info} (tool/resolve-tool tool)]
+    (do
+      (binding [*print-namespace-maps* false]
+        (pprint/pprint info))
+      (let [{:keys [ns-default ns-aliases]} (tool/usage tool)]
+        (println "Default namespace: " ns-default)
+        (doseq [[a n] ns-aliases]
+          (println "Namespace alias: " a))))))
+
+(comment
+  (show {:tool 'tools})
+  )
 
 (defn remove
   "Remove :tool, if it exists."
