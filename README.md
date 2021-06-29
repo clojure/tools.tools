@@ -16,7 +16,7 @@ Latest release:
 [deps.edn](https://clojure.org/reference/deps_and_cli) dependency information:
 
 ```
-io.github.cognitect-labs/tools.tools {:git/tag "v0.0.5" :git/sha "19d869b"}
+io.github.cognitect-labs/tools.tools {:git/tag "v0.0.6" :git/sha "e85c098"}
 ```
 
 # API 
