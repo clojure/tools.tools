@@ -18,10 +18,18 @@
     [clojure.tools.gitlibs :as gitlibs]))
 
 (defn install
-  "Install a tool for later use, taking the following required fields:
-    lib - lib name, and coord value
-    :as - tool name
-  On install, the tool is procured, and persisted with the tool name for later use."
+  "Install a tool under a local tool name for later use. On install, the tool is procured, and
+  persisted with the tool name for later use.
+
+  Options:
+    lib-name (required) - value is coord map (git coords may omit sha)
+    :as (required) - tool name
+  
+  Example:
+    clj -Ttools install io.github.clojure/tools.deps.graph '{:git/tag \"v1.0.63\"}' :as deps-graph
+  
+  Also see:
+    clj -X:deps find-versions :lib <lib>"
   [{:keys [as] :as args}]
   (let [lib (first (filter qualified-symbol? (keys args)))
         coord (get args lib)]
@@ -58,7 +66,13 @@
       rows)))
 
 (defn list
-  "List available tools"
+  "List available tools.
+
+  Options:
+    none
+
+  Example:
+    clj -Ttools list"
   [_]
   (print-table [:tool :lib :type :version]
     (cons
@@ -71,7 +85,13 @@
         (tool/list-tools)))))
 
 (defn show
-  "Print info and usage for this :tool"
+  "Print info and usage for this :tool.
+
+  Options:
+    :tool (required) - tool name to show
+
+  Example:
+    clj -Ttools show deps-graph"
   [{:keys [tool] :as args}]
   (if-let [{:keys [lib coord] :as info} (tool/resolve-tool tool)]
     (do
@@ -82,21 +102,13 @@
         (doseq [[a n] ns-aliases]
           (println "Namespace alias: " a))))))
 
-(comment
-  (show {:tool 'tools})
-  )
-
 (defn remove
-  "Remove :tool, if it exists."
+  "Remove :tool, if it exists.
+  
+  Options:
+    :tool (required) - tool name to remove"
   [{:keys [tool] :as args}]
   (if tool
     (if (tool/remove-tool tool)
       (println "Tool removed")
       (println "Tool not found or could not be removed"))))
-
-(comment
-  (install '{io.github.seancorfield/clj-new
-                  {:git/tag "v1.1.243"} :as "clj-new"})
-
-  (list nil)
-  )
