@@ -34,7 +34,7 @@
   (let [lib (first (filter qualified-symbol? (keys args)))
         coord (get args lib)]
     (when (or (not lib) (not coord) (not as))
-      (println "Missing required args: lib to coord or :as"))
+      (throw (ex-info "Missing required args, syntax: clj -Ttools lib-name coord :as tool-name" (or args {}))))
     (let [{:keys [root-edn user-edn]} (deps/find-edn-maps)
           master-edn (deps/merge-edns [root-edn user-edn])
           coord (let [{:git/keys [url sha tag]} coord
@@ -44,7 +44,7 @@
                     (assoc :git/sha (gitlibs/resolve url tag))))
           [lib coord] (ext/canonicalize lib coord master-edn)]
       (when-not (and lib coord)
-        (throw (ex-info (format "Could not resolve tool: %s" (pr-str args)) args)))
+        (throw (ex-info (format "Could not resolve tool: %s" (pr-str args)) (or args {}))))
       (tool/install-tool lib coord as)
       (println "Installed" as))))
 
@@ -93,6 +93,8 @@
   Example:
     clj -Ttools show deps-graph"
   [{:keys [tool] :as args}]
+  (when (nil? tool)
+    (throw (ex-info "Missing required arg :tool" (or args {}))))
   (if-let [{:keys [lib coord] :as info} (tool/resolve-tool tool)]
     (do
       (binding [*print-namespace-maps* false]
@@ -108,6 +110,8 @@
   Options:
     :tool (required) - tool name to remove"
   [{:keys [tool] :as args}]
+  (when (nil? tool)
+    (throw (ex-info "Missing required arg :tool" (or args {}))))
   (if tool
     (if (tool/remove-tool tool)
       (println "Tool removed")
