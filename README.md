@@ -8,20 +8,20 @@ Also see:
 * [Getting Started](https://clojure.org/guides/getting_started)
 * [Deps and CLI Guide](https://clojure.org/guides/deps_and_cli)
 * [Deps and CLI Reference](https://clojure.org/reference/deps_and_cli)
-* [Tool implementation and installers](https://github.com/clojure/brew-install)
 
 # Release Information
 
-Latest release: none yet
+Latest release:
 
-[deps.edn](https://clojure.org/guides/deps_and_cli) dependency information:
+[deps.edn](https://clojure.org/reference/deps_and_cli) dependency information:
 
 ```
-io.github.cognitect-labs/tools.tools {:git/tag "vT.B.D" :git/sha "TBDTBD"}
+io.github.cognitect-labs/tools.tools {:git/tag "v0.0.5" :git/sha "19d869b"}
 ```
 
 # API 
 
+* [API](https://clojure.github.io/tools.tools)
 
 # Developer Information
 

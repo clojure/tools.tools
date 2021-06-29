@@ -1,10 +1,23 @@
 {:paths ["src"]
- :deps {
+ 
+ :deps
+ {
    org.clojure/tools.deps.alpha {:mvn/version "0.11.911-SNAPSHOT"} ;; {:local/root "../tools.deps.alpha3"}
    org.clojure/tools.gitlibs {:mvn/version "2.3.167"}
    org.slf4j/slf4j-nop {:mvn/version "1.7.30"}
  }
- :tools/usage {
+ 
+ :tools/usage
+ {
    :ns-default clojure.tools.tools.api
+ }
+ 
+ :aliases
+ {
+   :codox {:extra-deps {codox/codox {:mvn/version "0.10.7"}}
+           :exec-fn codox.main/generate-docs
+           :exec-args {:source-paths ["src"]
+                       :namespaces [clojure.tools.tools.api]
+                       :output-path "docs"}}
  }
 }
