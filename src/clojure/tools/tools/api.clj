@@ -80,8 +80,8 @@
       (map (fn [tool]
              (let [{:keys [lib coord]} (tool/resolve-tool tool)
                    ctype (ext/coord-type coord)
-                   {mver :mvn/version gtag :git/tag} coord]
-               {:tool tool :lib lib :type ctype :version (or mver gtag)}))
+                   {mver :mvn/version gtag :git/tag gsha :git/sha} coord]
+               {:tool tool :lib lib :type ctype :version (or mver gtag gsha)}))
         (tool/list-tools)))))
 
 (defn show
