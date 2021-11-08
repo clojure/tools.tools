@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* v0.2.2 e1febed on Nov 5, 2021
+* v0.2.2 e1febed on Nov 8, 2021
   * update to latest tools.deps.alpha, tools.gitlibs
 * v0.2.1 3523d8b on Oct 10, 2021
   * list - if tag not available, use short sha
