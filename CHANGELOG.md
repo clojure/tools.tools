@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* v0.2.5 76f728d on Jan 26, 2022
   * update to tools.deps.alpha 0.12.1120
 * v0.2.4 fae1040 on Jan 5, 2022
   * update to tools.deps.alpha 0.12.1109
