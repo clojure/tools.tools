@@ -15,7 +15,8 @@
     [clojure.tools.deps.alpha.tool :as tool]
     [clojure.tools.deps.alpha.extensions :as ext]
     [clojure.tools.deps.alpha.extensions.git :as git]
-    [clojure.tools.gitlibs :as gitlibs]))
+    [clojure.tools.gitlibs :as gitlibs]
+    [clojure.string :as str]))
 
 (defn install
   "Install a tool under a local tool name for later use. On install, the tool is procured, and
@@ -34,7 +35,7 @@
   (let [lib (first (filter qualified-symbol? (keys args)))
         coord (get args lib)]
     (when (or (not lib) (not coord) (not as))
-      (throw (ex-info "Missing required args, syntax: clj -Ttools lib-name coord :as tool-name" (or args {}))))
+      (throw (ex-info "Missing required args, syntax: clj -Ttools install lib-name coord :as tool-name" (or args {}))))
     (let [{:keys [root-edn user-edn]} (deps/find-edn-maps)
           master-edn (deps/merge-edns [root-edn user-edn])
           coord (let [{:git/keys [url sha tag]} coord
@@ -47,6 +48,48 @@
         (throw (ex-info (format "Could not resolve tool: %s" (pr-str args)) (or args {}))))
       (tool/install-tool lib coord as)
       (println "Installed" as))))
+
+(defn- parse-install-latest-args
+  [{:keys [lib tool as] :as args}]
+  (cond (and lib as) args
+        tool (let [tool-info (tool/resolve-tool tool)]
+               (if tool-info
+                 (assoc tool-info :as tool)
+                 (throw (ex-info (str "Tool not found: " tool) {}))))
+        :else (throw (ex-info "Missing required args, install-latest requires either :tool or both :lib and :as" (or args {})))))
+
+(defn install-latest
+  "Install the latest version of a tool under a local tool name for later use.
+  On install, the tool is procured, and persisted with the tool name for later use.
+
+  Options:
+    :tool tool-name - currently installed tool
+    :lib lib-name - mvn lib or git lib with inferrable url
+    :as - tool name
+
+  Either :tool or both :lib and :as are required.
+
+  Example:
+    clj -Ttools install-latest :lib io.github.clojure/tools.deps.graph :as deps-graph
+    clj -Ttools install-latest :tool tools
+
+  Also see:
+    clj -X:deps find-versions :lib <lib>
+    clj -Ttools install <lib> <coord> :as tool-name"
+  [args]
+  (let [{:keys [lib as]} (parse-install-latest-args args)
+        {:keys [root-edn user-edn]} (deps/find-edn-maps)
+        master-edn (deps/merge-edns [root-edn user-edn])
+        coord (->> (ext/find-all-versions lib nil master-edn)
+                (clojure.core/remove #(let [mv (:mvn/version %)] (and mv (str/ends-with? mv "-SNAPSHOT"))))
+                last)]
+    (if coord
+      (do
+        (tool/install-tool lib coord as)
+        (println "Installed tool" as "as:" lib
+          (binding [*print-namespace-maps* false]
+            (pr-str coord))))
+      (println "Did not find versions for" lib))))
 
 (defn- max-len
   [vals]
