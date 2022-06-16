@@ -2,8 +2,8 @@
  
  :deps
  {
-   org.clojure/tools.deps.alpha {:mvn/version "0.12.1135"} ;; {:local/root "../tools.deps.alpha3"}
-   org.clojure/tools.gitlibs {:mvn/version "2.4.172"}
+   org.clojure/tools.deps.alpha {:mvn/version "0.14.1200"} ;; {:local/root "../tools.deps.alpha3"}
+   org.clojure/tools.gitlibs {:mvn/version "2.4.176"}
    org.slf4j/slf4j-nop {:mvn/version "1.7.32"}
  }
  
