@@ -16,7 +16,7 @@ Latest release:
 [deps.edn](https://clojure.org/reference/deps_and_cli) dependency information:
 
 ```
-io.github.clojure/tools.tools {:git/tag "v0.2.5" :git/sha "76f728d"}
+io.github.clojure/tools.tools {:git/tag "v0.2.6" :git/sha "09752f4"}
 ```
 
 # API 
@@ -31,7 +31,7 @@ io.github.clojure/tools.tools {:git/tag "v0.2.5" :git/sha "76f728d"}
 
 # Copyright and License
 
-Copyright © 2021 Rich Hickey, Alex Miller, and contributors
+Copyright © 2022 Rich Hickey, Alex Miller, and contributors
 
 All rights reserved. The use and
 distribution terms for this software are covered by the
