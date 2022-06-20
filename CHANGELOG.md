@@ -1,6 +1,9 @@
 Changelog
 ===========
 
+* next
+  * update to tools.gitlibs 2.4.181
+  * update to tools.deps.alpha 0.12.1212
 * v0.2.6 09752f4 on Jun 16, 2022
   * Add `install-latest` api function
   * update to tools.gitlibs 2.4.176
