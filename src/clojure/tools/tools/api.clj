@@ -66,18 +66,13 @@
     (if coord
       (let [current (tool/resolve-tool as)]
         (if (and current (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
-          (do
-            (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
-            false)
+          (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
           (do
             (tool/install-tool lib coord as)
             (println (str as ":") "Installed" (ext/coord-summary lib coord)
               (binding [*print-namespace-maps* false]
-                (pr-str coord)))
-            true)))
-      (do
-        (println (str as ":") "Did not find versions for" lib)
-        false))))
+                (pr-str coord))))))
+      (println (str as ":") "Did not find versions for" lib))))
 
 (defn install-latest
   "Install the latest version of a tool under a local tool name for later use.
@@ -108,7 +103,8 @@
           (try
             (let [{:keys [lib]} (tool/resolve-tool tool-name)]
               (install-1 lib tool-name master-edn))
-            (catch Exception e)))
+            (catch Exception e
+              (println (str tool-name ":") "Failed:" (.getMessage e)))))
         (tool/list-tools)))))
 
 (comment
