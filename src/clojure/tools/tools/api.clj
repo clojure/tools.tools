@@ -47,27 +47,48 @@
       (when-not (and lib coord)
         (throw (ex-info (format "Could not resolve tool: %s" (pr-str args)) (or args {}))))
       (tool/install-tool lib coord as)
-      (println "Installed" as))))
+      (println (str as ":") "Installed" (ext/coord-summary lib coord)))))
 
 (defn- parse-install-latest-args
   [{:keys [lib tool as] :as args}]
-  (cond (and lib as) args
+  (cond (or (zero? (count args)) (and lib as)) args
         tool (let [tool-info (tool/resolve-tool tool)]
                (if tool-info
                  (assoc tool-info :as tool)
                  (throw (ex-info (str "Tool not found: " tool) {}))))
         :else (throw (ex-info "Missing required args, install-latest requires either :tool or both :lib and :as" (or args {})))))
 
+(defn- install-1
+  [lib as master-edn]
+  (let [coord (->> (ext/find-all-versions lib nil master-edn)
+                (clojure.core/remove #(let [mv (:mvn/version %)] (and mv (str/ends-with? mv "-SNAPSHOT"))))
+                last)]
+    (if coord
+      (let [current (tool/resolve-tool as)]
+        (if (and current (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
+          (do
+            (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
+            false)
+          (do
+            (tool/install-tool lib coord as)
+            (println (str as ":") "Installed" (ext/coord-summary lib coord)
+              (binding [*print-namespace-maps* false]
+                (pr-str coord)))
+            true)))
+      (do
+        (println (str as ":") "Did not find versions for" lib)
+        false))))
+
 (defn install-latest
   "Install the latest version of a tool under a local tool name for later use.
   On install, the tool is procured, and persisted with the tool name for later use.
+  Either :tool or both :lib and :as are required to install a single tool.
+  If neither is provided, install the newest version of all tools.
 
   Options:
     :tool tool-name - currently installed tool
     :lib lib-name - mvn lib or git lib with inferrable url
     :as - tool name
-
-  Either :tool or both :lib and :as are required.
 
   Example:
     clj -Ttools install-latest :lib io.github.clojure/tools.deps.graph :as deps-graph
@@ -79,17 +100,32 @@
   [args]
   (let [{:keys [lib as]} (parse-install-latest-args args)
         {:keys [root-edn user-edn]} (deps/find-edn-maps)
-        master-edn (deps/merge-edns [root-edn user-edn])
-        coord (->> (ext/find-all-versions lib nil master-edn)
-                (clojure.core/remove #(let [mv (:mvn/version %)] (and mv (str/ends-with? mv "-SNAPSHOT"))))
-                last)]
-    (if coord
-      (do
-        (tool/install-tool lib coord as)
-        (println "Installed tool" as "as:" lib
-          (binding [*print-namespace-maps* false]
-            (pr-str coord))))
-      (println "Did not find versions for" lib))))
+        master-edn (deps/merge-edns [root-edn user-edn])]
+    (if lib
+      (install-1 lib as master-edn)
+      (run!
+        (fn [tool-name]
+          (try
+            (let [{:keys [lib]} (tool/resolve-tool tool-name)]
+              (install-1 lib tool-name master-edn))
+            (catch Exception e)))
+        (tool/list-tools)))))
+
+(comment
+  (tool/list-tools)
+  (tool/resolve-tool "deps-new")
+  (def master-edn
+    (let [{:keys [root-edn user-edn]} (deps/find-edn-maps)]
+      (deps/merge-edns [root-edn user-edn])))
+  (install-1 'com.github.seancorfield/deps-new "deps-new" master-edn)
+  (ext/find-all-versions 'com.github.seancorfield/deps-new nil master-edn)
+  (install-latest nil)
+  (install {'com.github.seancorfield/deps-new {:git/tag "v0.4.9" :git/sha "ba30a76"} :as "deps-new"})
+
+  (install {'org.clojure/data.json {:mvn/version "0.2.0"} :as "json"})
+  (tool/resolve-tool "json")
+  (install-latest {:tool "json"})
+  )
 
 (defn- max-len
   [vals]

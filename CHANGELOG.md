@@ -2,6 +2,8 @@ Changelog
 ===========
 
 * next
+  * `install-latest` - improve printing, add no-arg option to install all latest tools
+  * Fix `install-latest` git revision sorting to use semantic rather than lexicographic version sorting
   * update to tools.gitlibs 2.4.181
   * update to tools.deps.alpha 0.12.1212
 * v0.2.6 09752f4 on Jun 16, 2022
