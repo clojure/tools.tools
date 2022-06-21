@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * `install-latest` - further refine version release filtering
 * v0.2.7 dcc65e8 on Jun 20, 2022
   * `install-latest` - improve printing, add no-arg option to install all latest tools
   * Fix `install-latest` git revision sorting to use semantic rather than lexicographic version sorting

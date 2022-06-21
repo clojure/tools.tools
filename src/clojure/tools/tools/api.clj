@@ -58,10 +58,23 @@
                  (throw (ex-info (str "Tool not found: " tool) {}))))
         :else (throw (ex-info "Missing required args, install-latest requires either :tool or both :lib and :as" (or args {})))))
 
+(defn- release-version?
+  "Release version does not contain any of:
+    a, alpha, b, beta, m, milestone, rc, cr, snapshot"
+  [{:keys [git/tag mvn/version]}]
+  (let [v (or tag version)]
+    (when v
+      (let [vl (str/lower-case v)]
+        (not
+          (boolean
+            (some (fn [s] (str/includes? vl s))
+              ;; check subset of list in docstring as a is in alpha and snapshot, etc
+              ["a" "b" "m" "rc" "cr"])))))))
+
 (defn- install-1
   [lib as master-edn]
   (let [coord (->> (ext/find-all-versions lib nil master-edn)
-                (clojure.core/remove #(let [mv (:mvn/version %)] (and mv (str/ends-with? mv "-SNAPSHOT"))))
+                (filter release-version?)
                 last)]
     (if coord
       (let [current (tool/resolve-tool as)]
@@ -79,6 +92,14 @@
   On install, the tool is procured, and persisted with the tool name for later use.
   Either :tool or both :lib and :as are required to install a single tool.
   If neither is provided, install the newest version of all tools.
+
+  The latest version is determined by listing the versions in semver order,
+  filtering out versions with special strings, and choosing the last one.
+  Special strings that cause a version to be ignored are:
+      alpha a beta b miletone m rc cr snapshot
+
+  It is recommended that Maven tool releases use Maven release version
+  conventions, and that git tool releases use tags in the format \"vA.B.C\".
 
   Options:
     :tool tool-name - currently installed tool
@@ -121,6 +142,10 @@
   (install {'org.clojure/data.json {:mvn/version "0.2.0"} :as "json"})
   (tool/resolve-tool "json")
   (install-latest {:tool "json"})
+
+  (filter release-version? (ext/find-all-versions 'io.github.clj-holmes/clj-watson nil master-edn))
+  (filter release-version? (ext/find-all-versions 'org.clojure/clojure nil master-edn))
+  (filter release-version? (ext/find-all-versions 'io.github.clojure/data.json nil master-edn))
   )
 
 (defn- max-len
