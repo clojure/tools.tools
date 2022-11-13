@@ -25,10 +25,10 @@
   Options:
     lib-name (required) - value is coord map (git coords may omit sha)
     :as (required) - tool name
-  
+
   Example:
     clj -Ttools install io.github.clojure/tools.deps.graph '{:git/tag \"v1.0.63\"}' :as deps-graph
-  
+
   Also see:
     clj -X:deps find-versions :lib <lib>"
   [{:keys [as] :as args}]
@@ -192,7 +192,7 @@
     :tool (required) - tool name to show
 
   Example:
-    clj -Ttools show deps-graph"
+    clj -Ttools show :tool deps-graph"
   [{:keys [tool] :as args}]
   (when (nil? tool)
     (throw (ex-info "Missing required arg :tool" (or args {}))))
@@ -208,7 +208,7 @@
 
 (defn remove
   "Remove :tool, if it exists.
-  
+
   Options:
     :tool (required) - tool name to remove"
   [{:keys [tool] :as args}]
