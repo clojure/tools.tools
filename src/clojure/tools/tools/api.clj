@@ -196,14 +196,15 @@
   [{:keys [tool] :as args}]
   (when (nil? tool)
     (throw (ex-info "Missing required arg :tool" (or args {}))))
-  (if-let [{:keys [lib coord] :as info} (tool/resolve-tool tool)]
+  (if-let [info (tool/resolve-tool tool)]
     (do
       (binding [*print-namespace-maps* false]
         (pprint/pprint info))
       (let [{:keys [ns-default ns-aliases]} (tool/usage tool)]
         (println "Default namespace: " ns-default)
-        (doseq [[a n] ns-aliases]
-          (println "Namespace alias: " a))))))
+        (doseq [[a _n] ns-aliases]
+          (println "Namespace alias: " a))))
+    (println (str "Tool not found: " tool))))
 
 (defn remove
   "Remove :tool, if it exists.
@@ -213,7 +214,6 @@
   [{:keys [tool] :as args}]
   (when (nil? tool)
     (throw (ex-info "Missing required arg :tool" (or args {}))))
-  (if tool
-    (if (tool/remove-tool tool)
-      (println "Tool removed")
-      (println "Tool not found or could not be removed"))))
+  (if (tool/remove-tool tool)
+    (println "Tool removed")
+    (println "Tool not found or could not be removed")))
