@@ -5,3 +5,6 @@ target/
 .cpcache
 .lein*
 project.clj
+.calva/
+.lsp/
+.clj-kondo/
