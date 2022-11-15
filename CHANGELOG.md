@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* v0.2.9 61e43ad on Nov 14, 2022
   * update to tools.deps.alpha 0.15.1254
 * v0.2.8 9c5baa5 on Jun 21, 2022
   * `install-latest` - further refine version release filtering
