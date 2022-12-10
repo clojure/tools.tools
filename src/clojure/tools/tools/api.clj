@@ -11,10 +11,10 @@
   (:refer-clojure :exclude [list remove])
   (:require
     [clojure.pprint :as pprint]
-    [clojure.tools.deps.alpha :as deps]
-    [clojure.tools.deps.alpha.tool :as tool]
-    [clojure.tools.deps.alpha.extensions :as ext]
-    [clojure.tools.deps.alpha.extensions.git :as git]
+    [clojure.tools.deps :as deps]
+    [clojure.tools.deps.tool :as tool]
+    [clojure.tools.deps.extensions :as ext]
+    [clojure.tools.deps.extensions.git :as git]
     [clojure.tools.gitlibs :as gitlibs]
     [clojure.string :as str]))
 
