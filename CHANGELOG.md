@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* v0.3.1 859a615 on May 31, 2023
   * Update to tools.deps 0.18.1349
   * Update to tools.gitlibs 2.5.197
 * v0.3.0 12f7f66 on Dec 9, 2022
