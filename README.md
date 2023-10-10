@@ -16,7 +16,7 @@ Latest release:
 [deps.edn](https://clojure.org/reference/deps_and_cli) dependency information:
 
 ```
-io.github.clojure/tools.tools {:git/tag "v0.3.1" :git/sha "859a615"}
+io.github.clojure/tools.tools {:git/tag "v0.3.2" :git/sha "886f893"}
 ```
 
 # API 

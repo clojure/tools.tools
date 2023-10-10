@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* v0.3.2 886f893 on Oct 9, 2023
+  * install-latest - dont fail install if replacing tool with different lib
 * v0.3.1 859a615 on May 31, 2023
   * Update to tools.deps 0.18.1349
   * Update to tools.gitlibs 2.5.197
