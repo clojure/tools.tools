@@ -78,7 +78,7 @@
                 last)]
     (if coord
       (let [current (tool/resolve-tool as)]
-        (if (and current (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
+        (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
           (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
           (do
             (tool/install-tool lib coord as)
@@ -90,13 +90,17 @@
 (defn install-latest
   "Install the latest version of a tool under a local tool name for later use.
   On install, the tool is procured, and persisted with the tool name for later use.
-  Either :tool or both :lib and :as are required to install a single tool.
-  If neither is provided, install the newest version of all tools.
+
+  If :tool is provided, the latest version of that existing tool is updated.
+  If :lib and :as are provided, the latest version of that lib will be installed
+  with that tool name, replacing any existing tool by that name.
+  If no args are provided, install the newest version of all tools.
 
   The latest version is determined by listing the versions in semver order,
   filtering out versions with special strings, and choosing the last one.
   Special strings that cause a version to be ignored are:
       alpha a beta b miletone m rc cr snapshot
+  Note that for git deps, the newest tagged version will be installed.
 
   It is recommended that Maven tool releases use Maven release version
   conventions, and that git tool releases use tags in the format \"vA.B.C\".
@@ -130,7 +134,11 @@
 
 (comment
   (tool/list-tools)
-  (tool/resolve-tool "deps-new")
+
+  (install-latest {:lib 'io.github.seancorfield/clj-new :as 'new})
+  (install-latest {:lib 'io.github.seancorfield/deps-new :as 'new})
+
+  (tool/resolve-tool "new")
   (def master-edn
     (let [{:keys [root-edn user-edn]} (deps/find-edn-maps)]
       (deps/merge-edns [root-edn user-edn])))
