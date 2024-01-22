@@ -72,19 +72,20 @@
               ["a" "b" "m" "rc" "cr"])))))))
 
 (defn- install-1
-  [lib as master-edn]
-  (let [coord (->> (ext/find-all-versions lib nil master-edn)
-                (filter release-version?)
-                last)]
+  [lib coord as master-edn]
+  (let [current (tool/resolve-tool as)
+        coord (or coord (->> (ext/find-all-versions lib (:coord current) master-edn)
+                             (filter release-version?)
+                             last
+                             (merge (:coord current))))]
     (if coord
-      (let [current (tool/resolve-tool as)]
-        (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
-          (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
-          (do
-            (tool/install-tool lib coord as)
-            (println (str as ":") "Installed" (ext/coord-summary lib coord)
-              (binding [*print-namespace-maps* false]
-                (pr-str coord))))))
+      (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
+        (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
+        (do
+          (tool/install-tool lib coord as)
+          (println (str as ":") "Installed" (ext/coord-summary lib coord)
+                   (binding [*print-namespace-maps* false]
+                     (pr-str coord)))))
       (println (str as ":") "Did not find versions for" lib))))
 
 (defn install-latest
@@ -95,6 +96,8 @@
   If :lib and :as are provided, the latest version of that lib will be installed
   with that tool name, replacing any existing tool by that name.
   If no args are provided, install the newest version of all tools.
+  Optionally :coord may be provided to accommodate privately hosted repositories
+  or other unresolvable urls.
 
   The latest version is determined by listing the versions in semver order,
   filtering out versions with special strings, and choosing the last one.
@@ -108,6 +111,7 @@
   Options:
     :tool tool-name - currently installed tool
     :lib lib-name - mvn lib or git lib with inferrable url
+    :coord - map (git coords may omit sha)
     :as - tool name
 
   Example:
@@ -118,16 +122,16 @@
     clj -X:deps find-versions :lib <lib>
     clj -Ttools install <lib> <coord> :as tool-name"
   [args]
-  (let [{:keys [lib as]} (parse-install-latest-args args)
+  (let [{:keys [lib coord as]} (parse-install-latest-args args)
         {:keys [root-edn user-edn]} (deps/find-edn-maps)
         master-edn (deps/merge-edns [root-edn user-edn])]
     (if lib
-      (install-1 lib as master-edn)
+      (install-1 lib coord as master-edn)
       (run!
         (fn [tool-name]
           (try
             (let [{:keys [lib]} (tool/resolve-tool tool-name)]
-              (install-1 lib tool-name master-edn))
+              (install-1 lib coord tool-name master-edn))
             (catch Exception e
               (println (str tool-name ":") "Failed:" (.getMessage e)))))
         (tool/list-tools)))))
