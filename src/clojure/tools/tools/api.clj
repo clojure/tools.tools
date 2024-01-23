@@ -96,8 +96,8 @@
   If :lib and :as are provided, the latest version of that lib will be installed
   with that tool name, replacing any existing tool by that name.
   If no args are provided, install the newest version of all tools.
-  Optionally :coord may be provided to accommodate privately hosted repositories
-  or other unresolvable urls.
+  Optionally :coord may be provided for information not inferrable from the
+  lib name, such as a custom git url.
 
   The latest version is determined by listing the versions in semver order,
   filtering out versions with special strings, and choosing the last one.
@@ -111,7 +111,7 @@
   Options:
     :tool tool-name - currently installed tool
     :lib lib-name - mvn lib or git lib with inferrable url
-    :coord - map (git coords may omit sha)
+    :coord - coord map if needed (note: git coords may omit sha)
     :as - tool name
 
   Example:
