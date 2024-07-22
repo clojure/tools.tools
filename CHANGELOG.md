@@ -2,7 +2,7 @@ Changelog
 ===========
 
 * next
-  * Update to tools.deps 0.19.1421
+  * Update to tools.deps 0.19.1432
 * v0.3.3 2f4d299 on Jan 23, 2024
   * install-latest - TDEPS-253 - add :coord option for things like non-autoresolved git urls
   * Update to tools.deps 0.18.1398 and slf4j-nop that matches
