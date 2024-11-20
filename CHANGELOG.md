@@ -2,6 +2,7 @@ Changelog
 ===========
 
 * next
+  * [TDEPS-265](https://clojure.atlassian.net/browse/TDEPS-265) - fix install-latest when :coord with git url provided
   * Update to tools.deps 0.19.1432
 * v0.3.3 2f4d299 on Jan 23, 2024
   * install-latest - TDEPS-253 - add :coord option for things like non-autoresolved git urls
