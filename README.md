@@ -29,6 +29,14 @@ io.github.clojure/tools.tools {:git/tag "v0.3.3" :git/sha "2f4d299"}
 * [How to contribute](https://clojure.org/community/contributing)
 * [Bug Tracker](https://clojure.atlassian.net/browse/TDEPS)
 
+# Tests
+
+Run test
+
+``` sh 
+clj -X:test
+```
+
 # Copyright and License
 
 Copyright © Rich Hickey, Alex Miller, and contributors

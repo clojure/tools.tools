@@ -1,0 +1,27 @@
+name: Clojure Tests
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install rlwrap
+        run: sudo apt-get install -y rlwrap
+
+      - name: Install Clojure Tools
+        uses: DeLaGuardo/setup-clojure@13.0
+        with:
+          cli: latest
+
+      - name: Run tests
+        run: clj -X:test

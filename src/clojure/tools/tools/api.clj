@@ -74,18 +74,19 @@
 (defn- install-1
   [lib coord as master-edn]
   (let [current (tool/resolve-tool as)
-        coord (or coord (->> (ext/find-all-versions lib (:coord current) master-edn)
-                             (filter release-version?)
-                             last
-                             (merge (:coord current))))]
-    (if coord
-      (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) coord master-edn)))
-        (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib coord))
+        coord (or coord (:coord current))
+        latest-coord (->> (ext/find-all-versions lib coord master-edn)
+                          (filter release-version?)
+                          last
+                          (merge coord))]
+    (if latest-coord
+      (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) latest-coord master-edn)))
+        (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib latest-coord))
         (do
-          (tool/install-tool lib coord as)
-          (println (str as ":") "Installed" (ext/coord-summary lib coord)
+          (tool/install-tool lib latest-coord as)
+          (println (str as ":") "Installed" (ext/coord-summary lib latest-coord)
                    (binding [*print-namespace-maps* false]
-                     (pr-str coord)))))
+                     (pr-str latest-coord)))))
       (println (str as ":") "Did not find versions for" lib))))
 
 (defn install-latest
@@ -111,7 +112,7 @@
   Options:
     :tool tool-name - currently installed tool
     :lib lib-name - mvn lib or git lib with inferrable url
-    :coord - coord map if needed (note: git coords may omit sha)
+    :coord - coord map if needed (note: git coords only use :git/url)
     :as - tool name
 
   Example:
