@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* v0.3.4 0e9e6c8 on Nov 21, 2024
   * [TDEPS-265](https://clojure.atlassian.net/browse/TDEPS-265) - fix install-latest when :coord with git url provided
   * Update to latest clojure and tools.deps
 * v0.3.3 2f4d299 on Jan 23, 2024
