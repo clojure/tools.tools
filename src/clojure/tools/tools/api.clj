@@ -156,6 +156,10 @@
   (tool/resolve-tool "json")
   (install-latest {:tool "json"})
 
+  (install-latest {:lib 'com.github.bhauman/rebel-readline
+                   :coord {:deps/root "rebel-readline"}
+                   :as "testanother"})
+
   (filter release-version? (ext/find-all-versions 'io.github.clj-holmes/clj-watson nil master-edn))
   (filter release-version? (ext/find-all-versions 'org.clojure/clojure nil master-edn))
   (filter release-version? (ext/find-all-versions 'io.github.clojure/data.json nil master-edn))
