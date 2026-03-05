@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* v0.3.6 on Mar 5, 2026
+* v0.3.6 b67e68d on Mar 5, 2026
   * Fix install-latest when tool has available versions of multiple coordinate types
   * Update to latest tools.deps
 * v0.3.5 e73fe8f on Jan 5, 2026
