@@ -1,8 +1,11 @@
 Changelog
 ===========
 
-* next
+* v0.3.6 on Mar 5, 2026
   * Fix install-latest when tool has available versions of multiple coordinate types
+  * Update to latest tools.deps
+* v0.3.5 e73fe8f on Jan 5, 2026
+  * Update to latest tools.deps
 * v0.3.4 0e9e6c8 on Nov 21, 2024
   * [TDEPS-265](https://clojure.atlassian.net/browse/TDEPS-265) - fix install-latest when :coord with git url provided
   * Update to latest clojure and tools.deps
