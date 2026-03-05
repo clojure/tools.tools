@@ -75,8 +75,10 @@
   [lib coord as master-edn]
   (let [current (tool/resolve-tool as)
         coord (or coord (:coord current))
+        coord-type (ext/coord-type coord)
         latest-coord (->> (ext/find-all-versions lib coord master-edn)
                           (filter release-version?)
+                          (filter #(= coord-type (ext/coord-type %)))
                           last
                           (merge coord))]
     (if latest-coord
