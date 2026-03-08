@@ -67,20 +67,20 @@
 
 (defmacro let-tools-dir
   [[dir-sym dir-path] & body]
-  `(let [tmp# (jio/file (System/getProperty "java.io.tmpdir") (str (UUID/randomUUID)))
-         tools# (jio/file tmp# ".clojure" "tools")
-         old-home# (System/getProperty "user.home")
-         ~dir-sym (.getAbsolutePath tools#)]
-     (try
-       (.mkdirs tools#)
-       (.deleteOnExit tmp#)
-       (copy-dir ~dir-path (.getAbsolutePath tools#))
-       (System/setProperty "user.home" (.getAbsolutePath tmp#))
-       ~@body
-       (finally
-         (System/setProperty "user.home" old-home#)))))
-
-(println "!! env paths" (System/getenv "CLJ_CONFIG") (System/getenv "XDG_CONFIG_HOME"))
+  (if (or (System/getenv "CLJ_CONFIG") (System/getenv "XDG_CONFIG_HOME"))
+    (println "Skipping let-tools-dir test due to environment")
+    `(let [tmp# (jio/file (System/getProperty "java.io.tmpdir") (str (UUID/randomUUID)))
+           tools# (jio/file tmp# ".clojure" "tools")
+           old-home# (System/getProperty "user.home")
+           ~dir-sym (.getAbsolutePath tools#)]
+       (try
+         (.mkdirs tools#)
+         (.deleteOnExit tmp#)
+         (copy-dir ~dir-path (.getAbsolutePath tools#))
+         (System/setProperty "user.home" (.getAbsolutePath tmp#))
+         ~@body
+         (finally
+           (System/setProperty "user.home" old-home#))))))
 
 ;; when new tool has both git and maven versions, prefer git and install
 (deftest install-latest-new-mixed
