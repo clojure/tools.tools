@@ -4,6 +4,7 @@
     [clojure.java.io :as jio]
     [clojure.string :as str]
     [clojure.test :refer :all]
+    [clojure.tools.deps.extensions.git :as git]
     [clojure.tools.tools.api :as api])
   (:import
     [java.io File]
@@ -79,9 +80,24 @@
        (finally
          (System/setProperty "user.home" old-home#)))))
 
+(println "!! env paths" (System/getenv "CLJ_CONFIG") (System/getenv "XDG_CONFIG_HOME"))
+
+;; when new tool has both git and maven versions, prefer git and install
+(deftest install-latest-new-mixed
+  (let-tools-dir [tools "test-data/empty"]
+    (api/install-latest {:lib 'com.github.seancorfield/clj-new
+                         :as 'clj-new})
+    (let [new-edn (edn/read-string (slurp (jio/file tools "clj-new.edn")))]
+      (clojure.pprint/pprint new-edn)
+      ;; has a :git/tag
+      (is (= 'com.github.seancorfield/clj-new (-> new-edn :lib)))
+      (is (= "https://github.com/seancorfield/clj-new.git" (-> new-edn :lib git/auto-git-url)))
+      (is (-> new-edn :coord :git/tag))
+      (is (-> new-edn :coord :git/sha)))))
+
 ;; when out of date tool has both git and maven versions, only consider updates
 ;; to version with the same coordinate type. here, git is installed
-(deftest install-latest-mixed
+(deftest install-latest-existing-tool-mixed
   (let-tools-dir [tools "test-data/tools1"]
     (let [old-edn (edn/read-string (slurp (jio/file tools "clj-new.edn")))
           old-tag (-> old-edn :coord :git/tag)]

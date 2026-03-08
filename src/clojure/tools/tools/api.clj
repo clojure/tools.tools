@@ -76,11 +76,16 @@
   (let [current (tool/resolve-tool as)
         coord (or coord (:coord current))
         coord-type (ext/coord-type coord)
-        latest-coord (->> (ext/find-all-versions lib coord master-edn)
-                          (filter release-version?)
-                          (filter #(= coord-type (ext/coord-type %)))
-                          last
-                          (merge coord))]
+        release-coords (->> (ext/find-all-versions lib coord master-edn)
+                         (filter release-version?))
+        ;; try to match existing coord-type if there is one, else prefer git
+        available-coords (if coord-type
+                           (filter #(= coord-type (ext/coord-type %)) release-coords)
+                           (let [git-coords (filter #(= :git (ext/coord-type %)) release-coords)]
+                             (if (seq git-coords) git-coords release-coords)))
+        latest-coord (->> available-coords
+                       last
+                       (merge coord))]
     (if latest-coord
       (if (and current (= lib (:lib current)) (zero? (ext/compare-versions lib (:coord current) latest-coord master-edn)))
         (println (str as ":") "Skipping, newest installed" (ext/coord-summary lib latest-coord))
@@ -149,7 +154,7 @@
   (def master-edn
     (let [{:keys [root-edn user-edn]} (deps/find-edn-maps)]
       (deps/merge-edns [root-edn user-edn])))
-  (install-1 'com.github.seancorfield/deps-new "deps-new" master-edn)
+  (install-1 'com.github.seancorfield/deps-new nil "deps-new" master-edn)
   (ext/find-all-versions 'com.github.seancorfield/deps-new nil master-edn)
   (install-latest nil)
   (install {'com.github.seancorfield/deps-new {:git/tag "v0.4.9" :git/sha "ba30a76"} :as "deps-new"})
