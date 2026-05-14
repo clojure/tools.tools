@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* v0.3.8 fd43f6e on May 13, 2026
   * Update to Clojure 1.12.5 and latest tools.deps
 * v0.3.7 3adfb28 on Mar 9, 2026
   * Fix install-latest for new tools with available versions of multiple coordinate types
