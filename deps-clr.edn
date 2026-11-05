@@ -1,0 +1,23 @@
+{:paths ["src"]
+ 
+ :deps
+ {
+   io.github.clojure/clr.tools.deps {:git/tag "v0.31.1646" :git/sha "f664fee"}
+   io.github.clojure/clr.tools.gitlibs {:git/tag "v2.6.217" :git/sha "b5ddb68"}
+ }
+ 
+ :tools/usage
+ {
+   :ns-default clojure.tools.tools.api
+ }
+ 
+ :aliases
+ {
+
+  ;; Run tests:  clj -X:test
+  :test {:extra-paths ["test-clr"]
+	     :extra-deps {io.github.dmiller/test-runner {:git/tag "v0.5.3clr" :git/sha "ae91dd2"}}
+         :exec-fn cognitect.test-runner.api/test
+         :exec-args {:dirs ["test-clr"]}}
+ }
+}
